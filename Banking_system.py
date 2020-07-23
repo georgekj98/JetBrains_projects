@@ -4,19 +4,41 @@ import sqlite3
 
 def db_create():
     create_query = ''' CREATE TABLE IF NOT EXISTS card(
-                            id      INT  PRIMARY KEY ,
+                            id      INT PRIMARY KEY,
                             number  TEXT NOT NULL,
                             pin     TEXT NOT NULL,
-                            balance  DEFAULT 0
+                            balance DEFAULT 0
                             );'''
     cursor.execute(create_query)
     connection.commit()
 
 
-def db_insert(id,number,pin,balance=0):
-    insert_query = '''INSERT INTO card VALUES (id, number,pin, balance)'''
-    cursor.execute(insert_query)
+def db_check(check_acc):
+    data = cursor.execute("SELECT number FROM card")
+    return check_acc in [tup[0] for tup in data.fetchall()]
+
+
+def db_insert(insert_num,insert_pin,insert_balance):
+    data = cursor.execute("SELECT id FROM card")
+    insert_id = len(data.fetchall())+1
+    insert_query = '''INSERT INTO card VALUES (?,?,?,?)'''
+    cursor.execute(insert_query, (insert_id, insert_num, insert_pin, insert_balance))
     connection.commit()
+
+
+def db_display_balance(ac_number,ac_pin):
+    pull_query = '''SELECT
+                        id, 
+                        number,
+                        pin,
+                        balance,
+                    FROM
+                        card
+                    WHERE
+                        number = ac_number;'''
+    data = cursor.execute(pull_query)
+    if data[2] == pin:
+        print(data[3])
 
 
 class Account:
@@ -35,8 +57,8 @@ def acnt_generator():
         num[i] *= 2
         if num[i] > 9:
             num[i] -= 9
-    last = 10-(sum(num) % 10)
-    return pt_1+pt_2+str(last)
+    check_sum = 10-(sum(num) % 10)
+    return pt_1+pt_2+str(check_sum)
 
 
 connection = sqlite3.connect('card.s3db')
@@ -61,6 +83,7 @@ while choice != 0:
         print("\nYour card has been created")
         print(f"Your card number:\n{new_accnt.ac_num}")
         print(f"Your card PIN:\n{new_accnt.pin}\n")
+        db_insert(1,new_accnt.ac_num,new_accnt.pin,0)
 
     elif choice == 2:
         check_num = str(input("\nEnter your card number:"))
