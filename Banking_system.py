@@ -1,4 +1,22 @@
 import random
+import sqlite3
+
+
+def db_create():
+    create_query = ''' CREATE TABLE IF NOT EXISTS card(
+                            id      INT  PRIMARY KEY ,
+                            number  TEXT NOT NULL,
+                            pin     TEXT NOT NULL,
+                            balance  DEFAULT 0
+                            );'''
+    cursor.execute(create_query)
+    connection.commit()
+
+
+def db_insert(id,number,pin,balance=0):
+    insert_query = '''INSERT INTO card VALUES (id, number,pin, balance)'''
+    cursor.execute(insert_query)
+    connection.commit()
 
 
 class Account:
@@ -17,15 +35,13 @@ def acnt_generator():
         num[i] *= 2
         if num[i] > 9:
             num[i] -= 9
-    s = sum(num)
-    last = 0
-    while s % 10 != 0:
-        s += 1
-        last += 1
-
+    last = 10-(sum(num) % 10)
     return pt_1+pt_2+str(last)
 
 
+connection = sqlite3.connect('card.s3db')
+cursor = connection.cursor()
+db_create()
 accnt_list = {}
 choice = 12
 while choice != 0:
