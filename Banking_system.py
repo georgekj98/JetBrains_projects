@@ -43,11 +43,11 @@ class Account:
 
     def __init__(self, ac_num1):
         self.ac_num = ac_num1
-        self.pin = int(''.join(["{}".format(random.randint(0, 9)) for i in range(4)]))
+        self.pin = str(''.join(["{}".format(random.randint(0, 9)) for i in range(4)]))
         self.balance = 0
 
 
-def acnt_generator():
+def account_generator():
     pt_1 = "400000"
     pt_2 = ''.join(["{}".format(random.randint(0, 9)) for i in range(9)])
     num = [int(i) for i in (pt_1 + pt_2)]
@@ -59,11 +59,13 @@ def acnt_generator():
     return pt_1+pt_2+str(check_sum)
 
 
+# Establishing connection to the local database
 connection = sqlite3.connect('card.s3db')
 cursor = connection.cursor()
+# db_create() functions creates a table if it isn't present
 db_create()
-#accnt_list = {}
-choice = 12
+
+choice = 123
 while choice != 0:
     choice = int(input("1. Create an account\n2. Log into account\n0. Exit\n"))
     if choice == 0:
@@ -71,27 +73,27 @@ while choice != 0:
         break
 
     elif choice == 1:
-        ac_num = ""
-        while ac_num not in accnt_list:
-            ac_num = acnt_generator()
-            if ac_num not in accnt_list:
-                accnt_list[ac_num] = None
+        ac_num = account_generator()
+        while():
+            if db_check(ac_num):
+                ac_num = account_generator()
+            else:
+                break
         new_accnt = Account(ac_num)
-        accnt_list[ac_num] = new_accnt
+        db_insert(new_accnt.ac_num, new_accnt.pin, 0)
         print("\nYour card has been created")
         print(f"Your card number:\n{new_accnt.ac_num}")
         print(f"Your card PIN:\n{new_accnt.pin}\n")
-        db_insert(1,new_accnt.ac_num,new_accnt.pin,0)
 
     elif choice == 2:
         check_num = str(input("\nEnter your card number:"))
         check_pin = int(input("Enter your PIN:"))
-        if check_num not in accnt_list:
+        if not db_check(check_num):
             print("\nWrong card number or PIN!")
             continue
         else:
-            check_acnt = accnt_list[check_num]
-        if not check_acnt.pin == check_pin:
+            check_acnt = db_retrieve(check_num)
+        if check_acnt[1] != check_pin:
             print("\nWrong card number or PIN!")
             continue
         print("\nYou have successfully logged in!")
@@ -99,7 +101,7 @@ while choice != 0:
         while True:
             choice_2 = int(input("\n1. Balance\n2. Log out\n0. Exit\n"))
             if choice_2 == 1:
-                print(f"Balance: {check_acnt.balance}\n")
+                print(f"Balance: {check_acnt[2]}\n")
             elif choice_2 == 2:
                 print("\nYou have successfully logged out!\n")
                 break
