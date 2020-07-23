@@ -26,19 +26,17 @@ def db_insert(insert_num,insert_pin,insert_balance):
     connection.commit()
 
 
-def db_display_balance(ac_number,ac_pin):
-    pull_query = '''SELECT
-                        id, 
+def db_retrieve(ret_number):
+    ret_query = '''SELECT 
                         number,
                         pin,
-                        balance,
+                        balance
                     FROM
                         card
                     WHERE
-                        number = ac_number;'''
-    data = cursor.execute(pull_query)
-    if data[2] == pin:
-        print(data[3])
+                        number =?;'''
+    data = cursor.execute(ret_query,(ret_number,))
+    return data.fetchone()
 
 
 class Account:
@@ -64,7 +62,7 @@ def acnt_generator():
 connection = sqlite3.connect('card.s3db')
 cursor = connection.cursor()
 db_create()
-accnt_list = {}
+#accnt_list = {}
 choice = 12
 while choice != 0:
     choice = int(input("1. Create an account\n2. Log into account\n0. Exit\n"))
