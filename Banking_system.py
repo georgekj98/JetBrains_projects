@@ -87,7 +87,7 @@ while choice != 0:
 
     elif choice == 2:
         check_num = str(input("\nEnter your card number:"))
-        check_pin = int(input("Enter your PIN:"))
+        check_pin = str(input("Enter your PIN:"))
         if not db_check(check_num):
             print("\nWrong card number or PIN!")
             continue
