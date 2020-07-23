@@ -55,7 +55,7 @@ def account_generator():
         num[i] *= 2
         if num[i] > 9:
             num[i] -= 9
-    check_sum = 10-(sum(num) % 10)
+    check_sum = str((10 - sum(num) % 10) % 10)
     return pt_1+pt_2+str(check_sum)
 
 
