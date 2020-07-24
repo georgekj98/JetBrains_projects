@@ -26,6 +26,12 @@ def db_insert(insert_num,insert_pin,insert_balance):
     connection.commit()
 
 
+def db_update(update_num, update_bal):
+    update_query = f''' UPDATE card SET balance = {update_bal} WHERE number = {update_num}'''
+    cursor.execute(update_query)
+
+
+
 def db_retrieve(ret_number):
     ret_query = '''SELECT 
                         number,
@@ -92,8 +98,8 @@ while choice != 0:
             print("\nWrong card number or PIN!")
             continue
         else:
-            check_acnt = db_retrieve(check_num)
-        if check_acnt[1] != check_pin:
+            ac_num, pin, balance = db_retrieve(check_num)
+        if pin != check_pin:
             print("\nWrong card number or PIN!")
             continue
         print("\nYou have successfully logged in!")
@@ -101,7 +107,7 @@ while choice != 0:
         while True:
             choice_2 = int(input("\n1. Balance\n2. Log out\n0. Exit\n"))
             if choice_2 == 1:
-                print(f"Balance: {check_acnt[2]}\n")
+                print(f"Balance: {balance}\n")
             elif choice_2 == 2:
                 print("\nYou have successfully logged out!\n")
                 break
