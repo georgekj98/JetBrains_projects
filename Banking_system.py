@@ -31,7 +31,6 @@ def db_update(update_num, update_bal):
     cursor.execute(update_query)
 
 
-
 def db_retrieve(ret_number):
     ret_query = '''SELECT 
                         number,
@@ -45,24 +44,29 @@ def db_retrieve(ret_number):
     return data.fetchone()
 
 
+def check_luhn(num):
+    num = int(num)
+    for i in range(0, 15, 2):
+        num[i] *= 2
+        if num[i] > 9:
+            num[i] -= 9
+    check_sum = str((10 - sum(num) % 10) % 10)
+    return check_sum
+
+
+def account_generator():
+    pt_1 = "400000"
+    pt_2 = ''.join(["{}".format(random.randint(0, 9)) for i in range(9)])
+    check_sum = check_luhn(pt_1 + pt_2)
+    return pt_1+pt_2+str(check_sum)
+
+
 class Account:
 
     def __init__(self, ac_num1):
         self.ac_num = ac_num1
         self.pin = str(''.join(["{}".format(random.randint(0, 9)) for i in range(4)]))
         self.balance = 0
-
-
-def account_generator():
-    pt_1 = "400000"
-    pt_2 = ''.join(["{}".format(random.randint(0, 9)) for i in range(9)])
-    num = [int(i) for i in (pt_1 + pt_2)]
-    for i in range(0, 15, 2):
-        num[i] *= 2
-        if num[i] > 9:
-            num[i] -= 9
-    check_sum = str((10 - sum(num) % 10) % 10)
-    return pt_1+pt_2+str(check_sum)
 
 
 # Establishing connection to the local database
