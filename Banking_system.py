@@ -49,7 +49,7 @@ def db_account_close(close_num):
     del_query = f"DELETE FROM card WHERE number ={close_num}"
     cursor.execute(del_query)
     connection.commit()
-    print("The account has been closed!")
+    print("\nThe account has been closed!\n")
 
 
 def check_luhn(num):
@@ -81,30 +81,31 @@ def sub_menu(log_num):
 
     while True:
         log_num, log_pin, log_bal = db_retrieve(log_num)
-        choice_2 = int(input("\n1. Balance\n2. Add income\n3. Do transfer\n4. Close account\n5.Log out\n0. Exit\n"))
+        choice_2 = int(input("\n1. Balance\n2. Add income\n3. Do transfer\n4. Close account\n5. Log out\n0. Exit\n"))
         if choice_2 == 1:
-            print(f"Balance: {log_bal}\n")
+            print(f"\nBalance: {log_bal}")
 
         elif choice_2 == 2:
-            deposit = int(input("\nEnter income:"))
+            deposit = int(input("\nEnter income:\n"))
             db_update(log_num, int(log_bal+deposit))
-            print("Income was added!")
+            print("\nIncome was added!")
 
         elif choice_2 == 3:
-            trans_num = input("\nTransfer\nEnter card number:")
+            trans_num = input("\nTransfer\nEnter card number:\n")
             if not (check_luhn(trans_num[:-1]) == trans_num[-1]):
                 print("\nProbably you made mistake in the card number. Please try again!")
             else:
                 if not (db_check(trans_num)):
                     print("\nSuch a card does not exist.")
                 else:
-                    trans_amt = int(input("\nEnter how much money you want to transfer:"))
+                    trans_amt = int(input("\nEnter how much money you want to transfer:\n"))
                     if trans_amt > log_bal:
                         print("\nNot enough money!")
                     else:
                         trans_num, trans_pin, trans_bal = db_retrieve(trans_num)
                         db_update(log_num, int(log_bal-trans_amt))
                         db_update(trans_num, int(trans_bal+trans_amt))
+                        print("\nSuccess!")
 
         elif choice_2 == 4:
             db_account_close(log_num)
@@ -146,8 +147,8 @@ while choice != 0:
         print(f"Your card PIN:\n{new_accnt.pin}\n")
 
     elif choice == 2:
-        check_num = str(input("\nEnter your card number:"))
-        check_pin = str(input("Enter your PIN:"))
+        check_num = str(input("\nEnter your card number:\n"))
+        check_pin = str(input("Enter your PIN:\n"))
         if not db_check(check_num):
             print("\nWrong card number or PIN!")
             continue
