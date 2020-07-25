@@ -45,7 +45,7 @@ def db_retrieve(ret_number):
 
 
 def check_luhn(num):
-    num = int(num)
+    num = num = [int(i) for i in num]
     for i in range(0, 15, 2):
         num[i] *= 2
         if num[i] > 9:
@@ -57,7 +57,7 @@ def check_luhn(num):
 def account_generator():
     pt_1 = "400000"
     pt_2 = ''.join(["{}".format(random.randint(0, 9)) for i in range(9)])
-    check_sum = check_luhn(pt_1 + pt_2)
+    check_sum = check_luhn(str(pt_1 + pt_2))
     return pt_1+pt_2+str(check_sum)
 
 
