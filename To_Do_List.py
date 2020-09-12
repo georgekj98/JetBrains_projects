@@ -24,7 +24,7 @@ def print_tasks():
         print("Nothing to do!")
     for i, row in enumerate(rows):
         print(f"{str(i+1)}. {row.task}")
-    print("\n")
+    print()
     return
 
 
@@ -50,9 +50,9 @@ def cli():
         elif choice == '1':
             print_tasks()
         elif choice == '2':
-            new_task = input("\nEnter task")
+            new_task = input("\nEnter task\n")
             add_task(new_task)
-            print("The task has been added!")
+            print("The task has been added!\n")
 
 
 if __name__ == '__main__':
@@ -61,11 +61,6 @@ if __name__ == '__main__':
     Session = sessionmaker(bind=engine)
     session = Session()
     cli()
-    #task_1 = Task()
-    #task_1.id = 2
-    #task_1.task = "Okay just making sure"
-    #session.add(task_1)
-    #session.commit()
     session.close()
 
 
