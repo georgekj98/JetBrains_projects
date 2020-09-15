@@ -56,11 +56,13 @@ def cli():
 
 
 if __name__ == '__main__':
-    engine = create_engine('sqlite:////todo.db?check_same_thread=False')
+    engine = create_engine('sqlite:////todo_list.db?check_same_thread=False')
     Base.metadata.create_all(engine)
+    # Task.__table__.create(engine)
     Session = sessionmaker(bind=engine)
     session = Session()
     cli()
+    #Base.metadata.drop_all(bind=engine)
     session.close()
 
 
