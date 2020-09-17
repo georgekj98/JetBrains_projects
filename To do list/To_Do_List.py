@@ -57,8 +57,9 @@ class ToDo_List():
         print(f"\nToday {day} {month}:")
         if len(rows) == 0:
             print("Nothing to do!")
-        for i, row in enumerate(rows):
-            print(f"{str(i + 1)}. {row.task}")
+        else:
+            for i, row in enumerate(rows):
+                print(f"{str(i + 1)}. {row.task}")
         print()
         return
 
@@ -66,7 +67,7 @@ class ToDo_List():
 
         print()
         today = datetime.today()
-        for delta in range(6):
+        for delta in range(7):
             day_of_week = today + timedelta(days=delta)
             rows = self.session.query(self.Task).filter(self.Task.deadline == day_of_week.date()).all()
             day_week = day_of_week.strftime("%A")
@@ -83,7 +84,7 @@ class ToDo_List():
     def all_task(self):
 
         print("\nAll tasks:")
-        rows = self.session.query(self.Task).all()
+        rows = self.session.query(self.Task).order_by(self.Task.deadline).all()
         if len(rows) == 0:
             print("Nothing to do!")
         for i, row in enumerate(rows):
@@ -104,13 +105,13 @@ class ToDo_List():
                 return
             elif choice == '1':
                 self.today_task()
+            elif choice == '2':
+                self.week_task()
+            elif choice == '3':
+                self.all_task()
             elif choice == '4':
                 self.add_task()
                 print("The task has been added!\n")
-            elif choice == '3':
-                self.all_task()
-            elif choice == '2':
-                self.week_task()
 
 
 if __name__ == '__main__':
