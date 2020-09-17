@@ -49,7 +49,18 @@ class ToDo_List():
         return
 
     def today_task(self):
-        pass
+
+        today = datetime.today()
+        rows = self.session.query(self.Task).filter(self.Task.deadline == today.date()).all()
+        day = str(today.day)
+        month = today.strftime("%b")
+        print(f"\nToday {day} {month}:")
+        if len(rows) == 0:
+            print("Nothing to do!")
+        for i, row in enumerate(rows):
+            print(f"{str(i + 1)}. {row.task}")
+        print()
+        return
 
     def week_task(self):
         pass
@@ -76,7 +87,7 @@ class ToDo_List():
                 print("\nBye!")
                 return
             elif choice == '1':
-                self.print_tasks()
+                self.today_task()
             elif choice == '4':
                 self.add_task()
                 print("The task has been added!\n")
