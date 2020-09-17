@@ -100,6 +100,7 @@ class ToDo_List():
             choice = input("1) Today's tasks\n2) Week's tasks\n3) All tasks\n4) Add task\n0) Exit\n")
             if choice == '0':
                 print("\nBye!")
+                self.session.close()
                 return
             elif choice == '1':
                 self.today_task()
@@ -113,26 +114,5 @@ class ToDo_List():
 
 
 if __name__ == '__main__':
-   task_list = ToDo_List('todo_list.db')
-   task_list.cli()
-
-   ''' engine = create_engine('sqlite:///todo_list.db?check_same_thread=False')
-    Base.metadata.create_all(engine)
-    # Task.__table__.create(engine)
-    Session = sessionmaker(bind=engine)
-    session = Session()
-    cli()
-    #Base.metadata.drop_all(bind=engine)
-    session.close()'''
-
-
-''' def list_out():
-        print("Today:")
-        print("1) Do yoga")
-        print("2) Make breakfast")
-        print("3) Learn basics of SQL")
-        print("4) Learn what is ORM")
-
-
-list_out()'''
-
+    task_list = ToDo_List('todo_list.db')
+    task_list.cli()
