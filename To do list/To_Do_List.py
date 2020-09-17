@@ -22,26 +22,15 @@ class ToDo_List():
         Session = sessionmaker(bind=engine)
         self.session = Session()
 
-    '''def print_tasks(self):
-
-        print("\nToday:")
-        rows = self.session.query(self.Task).all()
-        if len(rows) == 0:
-            print("Nothing to do!")
-        for i, row in enumerate(rows):
-            print(f"{str(i+1)}. {row.task}")
-        print()
-        return'''
-
     def add_task(self):
 
         new_task = input("\nEnter task\n")
         dead_line = input("Enter deadline\n")
         dead_line = datetime.strptime(dead_line, "%Y-%m-%d")
-        rows = self.session.query(self.Task).all()
-        new_id = len(rows) + 1
+        # rows = self.session.query(self.Task).all()
+        # new_id = len(rows) + 1
         task = self.Task()
-        task.id = new_id
+        # task.id = new_id
         task.task = new_task
         task.deadline = dead_line
         self.session.add(task)
@@ -95,10 +84,28 @@ class ToDo_List():
         print()
         return
 
+    def missed_tasks(self):
+
+        print("\nMissed tasks:")
+        rows = self.session.query(self.Task).filter(self.Task.deadline < datetime.today().date()).order_by(self.Task.deadline).all()
+        if len(rows) == 0:
+            print("Nothing is missed")
+        for i, row in enumerate(rows):
+            date = row.deadline
+            day = str(date.day)
+            month = date.strftime("%b")
+            print(f"{str(i + 1)}. {row.task}. {day} {month}")
+        print()
+        return
+
+    def delete_tasks(self):
+        pass
+
     def cli(self):
 
         while True:
-            choice = input("1) Today's tasks\n2) Week's tasks\n3) All tasks\n4) Add task\n0) Exit\n")
+            choice = input("1) Today's tasks\n2) Week's tasks\n3) All tasks\n4) Missed tasks\n5) Add task\n6) Delete "
+                           "task\n0) Exit\n")
             if choice == '0':
                 print("\nBye!")
                 self.session.close()
@@ -110,10 +117,14 @@ class ToDo_List():
             elif choice == '3':
                 self.all_task()
             elif choice == '4':
+                self.missed_tasks()
+            elif choice == '5':
                 self.add_task()
                 print("The task has been added!\n")
+            elif choice == '6':
+                self.delete_tasks()
 
 
 if __name__ == '__main__':
-    task_list = ToDo_List('todo_list.db')
+    task_list = ToDo_List('todo_list_2.db')
     task_list.cli()
