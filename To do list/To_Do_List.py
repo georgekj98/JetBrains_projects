@@ -27,10 +27,7 @@ class ToDo_List():
         new_task = input("\nEnter task\n")
         dead_line = input("Enter deadline\n")
         dead_line = datetime.strptime(dead_line, "%Y-%m-%d")
-        # rows = self.session.query(self.Task).all()
-        # new_id = len(rows) + 1
         task = self.Task()
-        # task.id = new_id
         task.task = new_task
         task.deadline = dead_line
         self.session.add(task)
