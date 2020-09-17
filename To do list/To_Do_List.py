@@ -78,10 +78,23 @@ class ToDo_List():
             print("Nothing to do!")
         for i, row in enumerate(rows):
             date = row.deadline
-            day = str(date.day)
-            month = date.strftime("%b")
-            print(f"{str(i + 1)}. {row.task}. {day} {month}")
+            print(f"{str(i + 1)}. {row.task}. {date.strftime('%d %b')}")
         print()
+        return
+
+    def delete_tasks(self):
+        print("\nChoose the number of the task you want to delete:")
+        rows = self.session.query(self.Task).order_by(self.Task.deadline).all()
+        if len(rows) == 0:
+            print("Nothing to delete")
+        for i, row in enumerate(rows):
+            date = row.deadline
+            print(f"{str(i + 1)}. {row.task}. {date.strftime('%d %b')}")
+        id_r = int(input())
+        del_row = rows[id_r-1]
+        self.session.delete(del_row)
+        self.session.commit()
+        print("The task has been deleted!")
         return
 
     def missed_tasks(self):
@@ -97,9 +110,6 @@ class ToDo_List():
             print(f"{str(i + 1)}. {row.task}. {day} {month}")
         print()
         return
-
-    def delete_tasks(self):
-        pass
 
     def cli(self):
 
