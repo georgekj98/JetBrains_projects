@@ -1,11 +1,11 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, Date
-from datetime import datetime
+from datetime import datetime, timedelta
 from sqlalchemy.orm import sessionmaker
 
 
-class To_Do_List():
+class ToDo_List():
     Base = declarative_base()
 
     class Task(Base):
@@ -33,33 +33,47 @@ class To_Do_List():
         print()
         return
 
-    def add_task(self,new_task):
+    def add_task(self):
+
+        new_task = input("\nEnter task\n")
+        dead_line = input("Enter deadline\n")
+        dead_line = datetime.strptime(dead_line, "%Y-%m-%d")
         rows = self.session.query(self.Task).all()
         new_id = len(rows) + 1
         task = self.Task()
         task.id = new_id
         task.task = new_task
+        task.deadline = dead_line
         self.session.add(task)
         self.session.commit()
         return
 
+    def today_task(self):
+        pass
+
+    def week_task(self):
+        pass
+
+    def all_task(self):
+        pass
+
     def cli(self):
 
-        choice = 123
-        while choice:
-            choice = input("1) Today's tasks\n2) Add task\n0) Exit\n")
+        while True:
+            choice = input("1) Today's tasks\n2) Week's tasks\n3) All tasks\n4) Add task\n0) Exit\n")
             if choice == '0':
                 print("\nBye!")
                 return
             elif choice == '1':
                 self.print_tasks()
-            elif choice == '2':
-                new_task = input("\nEnter task\n")
-                self.add_task(new_task)
+            elif choice == '4':
+                self.add_task()
                 print("The task has been added!\n")
 
 
 if __name__ == '__main__':
+   task_list = ToDo_List('todo_list.db')
+   task_list.cli()ff
    ''' engine = create_engine('sqlite:///todo_list.db?check_same_thread=False')
     Base.metadata.create_all(engine)
     # Task.__table__.create(engine)
