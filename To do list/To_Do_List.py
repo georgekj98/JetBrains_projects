@@ -55,7 +55,18 @@ class ToDo_List():
         pass
 
     def all_task(self):
-        pass
+
+        print("\nAll tasks:")
+        rows = self.session.query(self.Task).all()
+        if len(rows) == 0:
+            print("Nothing to do!")
+        for i, row in enumerate(rows):
+            date = row.deadline
+            day = str(date.day)
+            month = date.strftime("%b")
+            print(f"{str(i + 1)}. {row.task}. {day} {month}")
+        print()
+        return
 
     def cli(self):
 
@@ -69,11 +80,13 @@ class ToDo_List():
             elif choice == '4':
                 self.add_task()
                 print("The task has been added!\n")
+            elif choice == '3':
+                self.all_task()
 
 
 if __name__ == '__main__':
    task_list = ToDo_List('todo_list.db')
-   task_list.cli()ff
+   task_list.cli()
    ''' engine = create_engine('sqlite:///todo_list.db?check_same_thread=False')
     Base.metadata.create_all(engine)
     # Task.__table__.create(engine)
