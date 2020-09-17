@@ -22,7 +22,7 @@ class ToDo_List():
         Session = sessionmaker(bind=engine)
         self.session = Session()
 
-    def print_tasks(self):
+    '''def print_tasks(self):
 
         print("\nToday:")
         rows = self.session.query(self.Task).all()
@@ -31,7 +31,7 @@ class ToDo_List():
         for i, row in enumerate(rows):
             print(f"{str(i+1)}. {row.task}")
         print()
-        return
+        return'''
 
     def add_task(self):
 
@@ -63,7 +63,22 @@ class ToDo_List():
         return
 
     def week_task(self):
-        pass
+
+        print()
+        today = datetime.today()
+        for delta in range(6):
+            day_of_week = today + timedelta(days=delta)
+            rows = self.session.query(self.Task).filter(self.Task.deadline == day_of_week.date()).all()
+            day_week = day_of_week.strftime("%A")
+            date_month = str(day_of_week.day)
+            month = today.strftime("%b")
+            print(f"{day_week} {date_month} {month}:")
+            if len(rows) == 0:
+                print("Nothing to do!")
+            for i, row in enumerate(rows):
+                print(f"{str(i + 1)}. {row.task}")
+            print()
+        return
 
     def all_task(self):
 
@@ -93,11 +108,14 @@ class ToDo_List():
                 print("The task has been added!\n")
             elif choice == '3':
                 self.all_task()
+            elif choice == '2':
+                self.week_task()
 
 
 if __name__ == '__main__':
    task_list = ToDo_List('todo_list.db')
    task_list.cli()
+
    ''' engine = create_engine('sqlite:///todo_list.db?check_same_thread=False')
     Base.metadata.create_all(engine)
     # Task.__table__.create(engine)
